@@ -27,8 +27,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-weight:
 
 /* ── PRELOADER ── */
 #preloader{position:fixed;inset:0;z-index:9999;background:#030303;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;}
-.pre-name{display:flex;gap:0;overflow:hidden;}
-.pre-letter{font-family:var(--syne);font-size:clamp(48px,8vw,96px);font-weight:800;color:var(--text);transform:translateY(120%);will-change:transform;}
+.pre-name{display:flex;flex-wrap:wrap;justify-content:center;gap:0;overflow:hidden;max-width:90vw;}
+.pre-letter{font-family:var(--syne);font-size:clamp(22px,6vw,96px);font-weight:800;color:var(--text);transform:translateY(120%);will-change:transform;}
 .pre-sub{font-family:var(--mono);font-size:11px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;opacity:0;}
 .pre-bar-wrap{width:200px;height:1px;background:rgba(255,255,255,0.08);overflow:hidden;opacity:0;}
 .pre-bar{height:100%;background:var(--accent);width:0%;transition:none;}
@@ -57,18 +57,18 @@ body.hovering #c-ring{width:56px;height:56px;border-color:rgba(255,255,255,0.3);
 .nav-links{display:flex;gap:28px;list-style:none;}
 .nav-links a{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;}
 .nav-links a:hover{color:var(--text);}
-#menuBtn{background:transparent;border:none;cursor:pointer;display:flex;flex-direction:column;gap:5px;padding:4px;z-index:600;}
+#menuBtn{background:transparent;border:none;cursor:pointer;display:flex;flex-direction:column;gap:5px;padding:4px;z-index:700;}
 #menuBtn span{display:block;width:22px;height:1.5px;background:var(--text);transition:transform .3s,opacity .3s,width .3s;transform-origin:center;}
 #menuBtn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
 #menuBtn.open span:nth-child(2){opacity:0;width:0;}
 #menuBtn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
 
 /* ── NAV OVERLAY ── */
-#navOverlay{position:fixed;inset:0;z-index:499;background:rgba(3,3,3,0.97);backdrop-filter:blur(24px);display:flex;align-items:center;justify-content:center;clip-path:circle(0% at calc(100% - 44px) 28px);transition:clip-path .6s cubic-bezier(0.77,0,.18,1);}
+#navOverlay{position:fixed;inset:0;z-index:600;background:rgba(3,3,3,0.97);backdrop-filter:blur(24px);display:flex;align-items:center;justify-content:center;clip-path:circle(0% at calc(100% - 44px) 28px);transition:clip-path .6s cubic-bezier(0.77,0,.18,1);}
 #navOverlay.open{clip-path:circle(150% at calc(100% - 44px) 28px);}
 .overlay-links{list-style:none;text-align:center;}
 .overlay-links li{overflow:hidden;margin-bottom:8px;}
-.overlay-links a{font-family:var(--syne);font-size:clamp(36px,6vw,72px);font-weight:800;color:var(--text);text-decoration:none;display:inline-block;transform:translateY(100%);transition:transform .5s cubic-bezier(0.77,0,.18,1),color .2s;letter-spacing:-.02em;}
+.overlay-links a{font-family:var(--syne);font-size:clamp(24px,4vw,48px);font-weight:800;color:var(--text);text-decoration:none;display:inline-block;transform:translateY(100%);transition:transform .5s cubic-bezier(0.77,0,.18,1),color .2s;letter-spacing:-.02em;}
 .overlay-links a:hover{color:var(--accent);}
 #navOverlay.open .overlay-links a{transform:translateY(0);}
 .overlay-links li:nth-child(1) a{transition-delay:.1s;}
@@ -81,14 +81,16 @@ body.hovering #c-ring{width:56px;height:56px;border-color:rgba(255,255,255,0.3);
 .overlay-contact a{color:var(--muted);text-decoration:none;transition:color .2s;}
 .overlay-contact a:hover{color:var(--text);}
 
-/* ── FLOATING IDENTITY (photo + name morph) ── */
-#fi-photo{position:fixed;overflow:hidden;border:1px solid var(--border-h);background:rgba(255,255,255,0.02);z-index:502;pointer-events:none;}
+/* ── FLOATING IDENTITY: hero-centered, fades out on scroll ── */
+#fi-photo{position:absolute;overflow:hidden;border:1px solid var(--border-h);background:rgba(255,255,255,0.02);pointer-events:none;left:50%;transform:translateX(-50%);}
 #fi-photo img{width:100%;height:100%;object-fit:cover;display:block;}
 .fi-empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;}
 .fi-empty svg{opacity:.18;}
 .fi-empty span{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:center;line-height:1.5;}
-#fi-name{position:fixed;font-family:var(--syne);color:var(--text);white-space:nowrap;z-index:502;pointer-events:none;line-height:1.05;}
+#fi-name{font-family:var(--syne);color:var(--text);pointer-events:none;line-height:1.05;text-align:center;margin-top:18px;font-size:clamp(36px,7vw,80px);font-weight:800;letter-spacing:-.03em;}
 #fi-name em{font-style:italic;color:var(--muted);}
+/* Hero identity wrapper — fades out as user scrolls */
+#hero-identity{display:flex;flex-direction:column;align-items:center;margin-bottom:20px;transition:opacity .3s;}
 
 /* ── SECTIONS SHARED ── */
 section{position:relative;z-index:2;}
@@ -266,22 +268,7 @@ section{position:relative;z-index:2;}
 <canvas id="aurora"></canvas>
 <canvas id="particles"></canvas>
 
-<!-- Floating Identity (photo + name morph to topbar) -->
-<div id="fi-photo" class="no-print">
-  <!--
-    ADD YOUR PHOTO:
-    Change src="" to src="photo.jpg" (same folder as this file)
-    Do the same for the img in #hero-photo-ph area if printing
-  -->
-  <img id="fi-img" src="photo.jpeg" alt="Syed Haider Ali">
-  <div class="fi-empty" id="fi-empty">
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="0.9">
-      <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-    </svg>
-    <span>Add photo<br>via src=""</span>
-  </div>
-</div>
-<div id="fi-name" class="no-print">Syed Haider<br><em>Ali Fatmi</em></div>
+<!-- Photo and name are now inside #hero-identity -->
 
 <!-- Nav -->
 <nav id="nav">
@@ -310,6 +297,7 @@ section{position:relative;z-index:2;}
     <li><a href="#research" class="nav-close">Research</a></li>
     <li><a href="#skills" class="nav-close">Skills</a></li>
     <li><a href="#education" class="nav-close">Education</a></li>
+    <li><a href="#volunteer" class="nav-close">Volunteer</a></li>
   </ul>
   <div class="overlay-contact">
     <a href="mailto:syedhaiderafzal@gmail.com">Email</a>
@@ -321,8 +309,18 @@ section{position:relative;z-index:2;}
 <!-- HERO -->
 <section id="hero">
   <span class="hero-label" id="heroLabel">Curriculum Vitae</span>
-  <div class="hero-photo-ph" id="photoPh"></div>
-  <div class="hero-name-ph" id="namePh">Syed Haider<br>Ali Fatmi</div>
+  <div id="hero-identity">
+    <div id="fi-photo" style="width:120px;height:134px;position:relative;transform:none;left:auto;">
+      <img id="fi-img" src="photo.jpeg" alt="Syed Haider Ali">
+      <div class="fi-empty" id="fi-empty">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="0.9">
+          <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+        <span>Add photo<br>via src=""</span>
+      </div>
+    </div>
+    <div id="fi-name">Syed Haider<br><em>Ali Fatmi</em></div>
+  </div>
   <p class="hero-role" id="heroRole">AI / ML Engineer &nbsp;·&nbsp; Data Scientist &nbsp;·&nbsp; MS AI — LUMS</p>
   <div class="hero-btns" id="heroBtns">
     <a href="#projects" class="btn btn-primary mag-btn">View Work</a>
@@ -554,6 +552,27 @@ section{position:relative;z-index:2;}
         <div class="edu-inst">University of the Punjab · Oct 2019 — Sep 2023</div>
         <p class="edu-desc">Four-year honours programme in mathematical statistics, probability theory, and applied data analysis — forming the quantitative backbone of my ML work in model evaluation, hypothesis testing, and causal reasoning.</p>
         <div class="edu-courses"><span class="edu-course">Probability Theory</span><span class="edu-course">Inferential Statistics</span><span class="edu-course">Multivariate Analysis</span><span class="edu-course">Experimental Design</span><span class="edu-course">Sampling Techniques</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- VOLUNTEER -->
+<section id="volunteer">
+  <div class="container">
+    <span class="sec-label fade-up">07 — Volunteer</span>
+    <h2 class="sec-title fade-up">Giving <em>back</em></h2>
+    <div class="tl-item fade-up" style="display:block;max-width:560px;">
+      <div class="tl-card spotlight-card" style="background:rgba(12,12,14,0.92);border:1px solid rgba(255,255,255,0.07);">
+        <div class="tl-date">2019 — Present</div>
+        <div class="tl-role">Volunteer Fundraiser</div>
+        <div class="tl-org">Duties Towards People</div>
+        <ul class="tl-list">
+          <li>Led and organized fundraising initiatives for community welfare projects over six continuous years.</li>
+          <li>Coordinated logistics, outreach, and donor engagement for multiple campaigns benefiting underserved communities.</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -791,11 +810,13 @@ section{position:relative;z-index:2;}
   const nav     = document.getElementById('nav');
   let open = false;
 
+  const heroId = document.getElementById('hero-identity');
   btn.addEventListener('click', () => {
     open = !open;
     btn.classList.toggle('open', open);
     overlay.classList.toggle('open', open);
     document.body.style.overflow = open ? 'hidden' : '';
+    if (heroId) heroId.style.visibility = open ? 'hidden' : 'visible';
   });
 
   document.querySelectorAll('.nav-close').forEach(a => {
@@ -804,6 +825,7 @@ section{position:relative;z-index:2;}
       btn.classList.remove('open');
       overlay.classList.remove('open');
       document.body.style.overflow = '';
+      if (heroId) heroId.style.visibility = 'visible';
     });
   });
 
@@ -813,21 +835,15 @@ section{position:relative;z-index:2;}
 })();
 
 // ═══════════════════════════════════════════════════════════
-// FLOATING IDENTITY MORPH
-// Photo + name: centered in hero → left in topbar on scroll
-// Key: measure big coords ONCE on init (page-absolute),
-// never re-measure during scroll.
+// HERO IDENTITY — simple fade out on scroll, no morph
 // ═══════════════════════════════════════════════════════════
 function initFloatingId() {
-  const fiPhoto = document.getElementById('fi-photo');
-  const fiImg   = document.getElementById('fi-img');
-  const fiEmpty = document.getElementById('fi-empty');
-  const fiName  = document.getElementById('fi-name');
-  const hero    = document.getElementById('hero');
-  const photoPh = document.getElementById('photoPh');
-  const namePh  = document.getElementById('namePh');
+  const identity = document.getElementById('hero-identity');
+  const fiImg    = document.getElementById('fi-img');
+  const fiEmpty  = document.getElementById('fi-empty');
+  const hero     = document.getElementById('hero');
 
-  // Photo src
+  // Photo src sync
   function syncPhoto() {
     const src = fiImg.getAttribute('src');
     fiEmpty.style.display = (src && src !== '' && fiImg.naturalWidth > 0) ? 'none' : 'flex';
@@ -836,63 +852,16 @@ function initFloatingId() {
   fiImg.addEventListener('error', () => { fiEmpty.style.display = 'flex'; });
   syncPhoto();
 
-  // Helpers
-  const lerp  = (a,b,t) => a + (b-a) * t;
-  const clamp = (v,lo,hi) => Math.min(Math.max(v,lo),hi);
-  const ease  = t => t < .5 ? 2*t*t : -1+(4-2*t)*t;
-
-  // Small target constants
-  const TB_H=56, TB_PAD=32, SPW=28, SPH=28, SFS=13;
-
-  // BIG state — measured once
-  let bigPL, bigPT, bigPW, bigPH, bigNL, bigNT, bigFS, heroH, heroPageTop;
-
-  function measureBig() {
-    const pp = photoPh.getBoundingClientRect();
-    const np = namePh.getBoundingClientRect();
-    const sy = window.scrollY || 0;
-    bigPW = pp.width; bigPH = pp.height;
-    bigPL = pp.left;  bigPT = pp.top + sy;
-    bigNL = np.left + np.width / 2;
-    bigNT = np.top  + np.height / 2 + sy;
-    bigFS = parseFloat(getComputedStyle(namePh).fontSize);
-    heroH = hero.offsetHeight;
-    heroPageTop = hero.getBoundingClientRect().top + sy;
+  // Fade out identity as hero scrolls away
+  function onScroll() {
+    const sy      = window.scrollY || 0;
+    const heroH   = hero.offsetHeight;
+    const progress = Math.min(sy / (heroH * 0.4), 1);
+    identity.style.opacity = 1 - progress;
   }
 
-  function morph() {
-    const sy  = window.scrollY || 0;
-    const raw = clamp((sy - (heroPageTop - TB_H)) / heroH, 0, 1);
-    const t   = ease(raw);
-
-    // Photo
-    fiPhoto.style.left         = lerp(bigPL, TB_PAD, t) + 'px';
-    fiPhoto.style.top          = lerp(bigPT - sy, (TB_H-SPH)/2, t) + 'px';
-    fiPhoto.style.width        = lerp(bigPW, SPW, t) + 'px';
-    fiPhoto.style.height       = lerp(bigPH, SPH, t) + 'px';
-    fiPhoto.style.borderRadius = lerp(0, 50, t) + '%';
-
-    // Name
-    const smallNL = TB_PAD + SPW + 10;
-    fiName.style.left     = lerp(bigNL, smallNL, t) + 'px';
-    fiName.style.top      = lerp(bigNT - sy, TB_H/2, t) + 'px';
-    fiName.style.fontSize = lerp(bigFS, SFS, t) + 'px';
-    if (t < .5) {
-      fiName.style.transform = 'translate(-50%,-50%)';
-      fiName.style.textAlign = 'center';
-    } else {
-      fiName.style.transform = 'translateY(-50%)';
-      fiName.style.textAlign = 'left';
-    }
-  }
-
-  document.fonts.ready.then(() => {
-    measureBig();
-    morph();
-  });
-
-  window.addEventListener('scroll', morph, { passive:true });
-  window.addEventListener('resize', () => { measureBig(); morph(); });
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
 }
 
 // ═══════════════════════════════════════════════════════════
